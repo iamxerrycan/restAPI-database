@@ -9,6 +9,7 @@ const newAppointment = new Appointment({
   fileUrls,
 });
 
+console.log("name", name ,"email", email, "date", date, "fileUrls", fileUrls);
 try {
   return await newAppointment.save();
 } catch (error) {
@@ -63,3 +64,4 @@ module.exports = {
   updateAppointment,
   deleteAppointment,
 };
+

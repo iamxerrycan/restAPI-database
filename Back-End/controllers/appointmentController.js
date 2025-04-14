@@ -3,12 +3,16 @@ const appointmentService = require('../services/appointmentService');
 // ✅ CREATE CONTROLLER
 const createAppointmentController = async (req, res) => {
   try {
-    // ✅ Fixed path and fallback if no files
-    const fileUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+    // ✅ Correct for single file upload
+    const fileUrls = req.file ? [`/uploads/${req.file.filename}`] : [];
+
+    console.log('Received data:', req.body);
+    console.log('File:', req.file);
+    console.log('File URLs:', fileUrls);    
 
     const appointment = await appointmentService.createAppointment({
       ...req.body,
-      fileUrls, // ✅ Make sure model field name is 'files'
+      fileUrls,
     });
 
     res.status(201).json({
@@ -22,6 +26,7 @@ const createAppointmentController = async (req, res) => {
     });
   }
 };
+
 
 // ✅ GET CONTROLLER
 const getAppointmentsController = async (req, res) => {

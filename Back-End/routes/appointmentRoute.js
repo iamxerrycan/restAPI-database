@@ -9,7 +9,7 @@ const {
   deleteAppointmentController
 } = require("../controllers/appointmentController");
 
-router.post(`/add`, upload.array('files'),validateAppointment, createAppointmentController);
+router.post('/add', upload.single('file'),validateAppointment, createAppointmentController);
 router.get(`/`, getAppointmentsController);
 router.put(`/:id`, updateAppointmentController);
 router.delete(`/:id`, deleteAppointmentController);
