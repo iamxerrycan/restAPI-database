@@ -11,7 +11,7 @@ const {
 
 router.post('/add', upload.single('file'),validateAppointment, createAppointmentController);
 router.get(`/`, getAppointmentsController);
-router.put(`/:id`, updateAppointmentController);
+router.put('/:id', upload.single('file'),validateAppointment, updateAppointmentController);
 router.delete(`/:id`, deleteAppointmentController);
 
 

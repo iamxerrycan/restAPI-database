@@ -47,7 +47,15 @@ const getAppointmentsController = async (req, res) => {
 // ✅ UPDATE CONTROLLER
 const updateAppointmentController = async (req, res) => {
   try {
-    const appointment = await appointmentService.updateAppointment(req.params.id, req.body);
+
+    const fileUrls = req.file ? [`/uploads/${req.file.filename}`] : [];
+
+    const updatedData = {
+      ...req.body,  // Spread other data (name, email, date)
+      ...(fileUrls.length > 0 && { fileUrls }), // If file uploaded, include fileUrls
+    };
+
+    const appointment = await appointmentService.updateAppointment(req.params.id, updatedData);
     
     // ✅ Added 404 check if not found
     if (!appointment) {

@@ -1,5 +1,5 @@
 const Appointment = require('../models/appointmentModel');
-
+const mongoose = require('mongoose');
 // ✅ CREATE APPOINTMENT
 const createAppointment = async ({name ,email,date,fileUrls}) => {
 const newAppointment = new Appointment({
@@ -19,6 +19,7 @@ try {
 
 // ✅ UPDATE APPOINTMENT
 const updateAppointment = async (id, data) => {
+
   try {
     const updatedAppointment = await Appointment.findByIdAndUpdate(id, data, { new: true });
     
