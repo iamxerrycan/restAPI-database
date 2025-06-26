@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const appointmentRoute = require("./routes/appointmentRoute");
 const contactRoutes = require("./routes/contactRautes");
 const authRoute = require("./routes/authRoute"); 
-import axios from "axios";
+const axios = require("axios");
 
 // Initialize express app
 const app = express();
