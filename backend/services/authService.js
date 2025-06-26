@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/userModel');
 const { generateToken } = require('../utils/jwtHelper');
 
 const registerService = async ({ name, email, password }) => {
