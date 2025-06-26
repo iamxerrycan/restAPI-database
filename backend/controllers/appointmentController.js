@@ -7,14 +7,16 @@ const createAppointmentController = async (req, res) => {
     const fileUrls = req.file ? [`/uploads/${req.file.filename}`] : [];
 
     console.log('Received data:', req.body);
-    console.log('File:', req.file);
-    console.log('File URLs:', fileUrls);    
+    console.log('req.file:', req.file);
+    console.log('File URLs:', fileUrls); 
+    console.log("BODY TYPE:", typeof req.body);
+console.log("BODY VALUE:", req.body);   
 
     const appointment = await appointmentService.createAppointment({
       ...req.body,
-      fileUrls,
+      fileUrls, // Include fileUrls in the appointment data
+      user: req.user._id, // Associate appointment with the user
     });
-
     res.status(201).json({
       success: true,
       data: appointment,

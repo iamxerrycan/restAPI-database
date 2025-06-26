@@ -8,11 +8,13 @@ const {
   updateAppointmentController,
   deleteAppointmentController
 } = require("../controllers/appointmentController");
+const protect = require("../middlewares/authMiddleware");
 
-router.post('/add', upload.single('file'),validateAppointment, createAppointmentController);
-router.get(`/`, getAppointmentsController);
-router.put('/:id', upload.single('file'),validateAppointment, updateAppointmentController);
-router.delete(`/:id`, deleteAppointmentController);
+router.post('/add' , protect ,  upload.single('file'),validateAppointment, createAppointmentController);
+router.get(`/`,protect, getAppointmentsController);
+router.put('/:id',protect,  upload.single('file'),validateAppointment, updateAppointmentController);
+router.delete(`/:id`,protect, deleteAppointmentController);
 
 
 module.exports = router;
+

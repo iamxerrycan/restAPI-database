@@ -1,61 +1,92 @@
 const Appointment = require('../models/appointmentModel');
-const mongoose = require('mongoose');
-// ✅ CREATE APPOINTMENT
-const createAppointment = async ({name ,email,date,fileUrls}) => {
-const newAppointment = new Appointment({
-  name,
-  email,
-  date,
-  fileUrls,
-});
 
-console.log("name", name ,"email", email, "date", date, "fileUrls", fileUrls);
-try {
-  return await newAppointment.save();
-} catch (error) {
-  throw new Error("Error creating appointment: " + error.message);
-}
-};
+// ✅ Create a new appointment
+const createAppointment = async (req, res) => {
+  const { name, email, date, fileUrls } = req.body;
 
-// ✅ UPDATE APPOINTMENT
-const updateAppointment = async (id, data) => {
+  // Ensure fileUrls is an array (even for a single file)
+  const files = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
+
+  const appointment = new Appointment({
+    name,
+    email,
+    date,
+    fileUrls: files,  // Use the validated fileUrls
+    user: req.user._id,  // Associate appointment with the user
+  });
 
   try {
-    const updatedAppointment = await Appointment.findByIdAndUpdate(id, data, { new: true });
-    
-    // ✅ Added check if appointment not found
-    if (!updatedAppointment) {
-      throw new Error("Appointment not found.");
-    }
-
-    return updatedAppointment;
+    await appointment.save();
+    res.status(201).json(appointment);
   } catch (error) {
-    throw new Error("Error updating appointment: " + error.message);
+    console.error(error);  // Log the error for debugging
+    res.status(400).json({
+      message: `Error creating appointment: ${error.message}`,
+    });
   }
 };
 
-// ✅ DELETE APPOINTMENT
-const deleteAppointment = async (id) => {
+// ✅ Get all appointments for the logged-in user
+const getAppointments = async (req, res) => {
   try {
-    const deletedAppointment = await Appointment.findByIdAndDelete(id);
-
-    // ✅ Added check if appointment not found
-    if (!deletedAppointment) {
-      throw new Error("Appointment not found.");
-    }
-
-    return deletedAppointment;
+    const appointments = await Appointment.find({ user: req.user._id });
+    res.status(200).json(appointments);
   } catch (error) {
-    throw new Error("Error deleting appointment: " + error.message);
+    console.error(error);  // Log the error for debugging
+    res.status(400).json({
+      message: `Error fetching appointments: ${error.message}`,
+    });
   }
 };
 
-// ✅ GET ALL APPOINTMENTS
-const getAppointments = async () => {
+// ✅ Update an existing appointment
+const updateAppointment = async (req, res) => {
+  const { name, email, date, fileUrls } = req.body;
+  const { id } = req.params;
+
+  // Ensure fileUrls is an array (even for a single file)
+  const files = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
+
   try {
-    return await Appointment.find();
+    const appointment = await Appointment.findOneAndUpdate(
+      { _id: id, user: req.user._id },  // Ensure the user owns the appointment
+      { name, email, date, fileUrls: files },
+      { new: true }  // Return the updated appointment
+    );
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    res.status(200).json(appointment);
   } catch (error) {
-    throw new Error("Error getting appointments: " + error.message);
+    console.error(error);  // Log the error for debugging
+    res.status(400).json({
+      message: `Error updating appointment: ${error.message}`,
+    });
+  }
+};
+
+// ✅ Delete an appointment
+const deleteAppointment = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const appointment = await Appointment.findOneAndDelete({
+      _id: id,
+      user: req.user._id,  // Ensure the user owns the appointment
+    });
+
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    res.status(200).json({ message: 'Appointment deleted' });
+  } catch (error) {
+    console.error(error);  // Log the error for debugging
+    res.status(400).json({
+      message: `Error deleting appointment: ${error.message}`,
+    });
   }
 };
 
@@ -65,4 +96,3 @@ module.exports = {
   updateAppointment,
   deleteAppointment,
 };
-
