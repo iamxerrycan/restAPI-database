@@ -11,7 +11,7 @@ const {
 const protect = require("../middlewares/authMiddleware");
 
 router.post('/add' , protect ,  upload.single('file'),validateAppointment, createAppointmentController);
-router.get(`/`,protect, getAppointmentsController);
+router.get(``,protect, getAppointmentsController);
 router.put('/:id',protect,  upload.single('file'),validateAppointment, updateAppointmentController);
 router.delete(`/:id`,protect, deleteAppointmentController);
 

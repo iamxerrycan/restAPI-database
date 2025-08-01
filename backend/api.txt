@@ -1,0 +1,57 @@
+📌 BASE URL
+http://localhost:5000/api/appointments/auth
+
+
+📝 REGISTER USER
+-------------------------
+Method: POST
+URL:    /register
+Body (raw JSON):
+{
+  "name": "TestUser1",
+  "email": "testuser1@example.com",
+  "password": "test12345"
+}
+
+✔️ Response (201 Created):
+{
+  "_id": "some_object_id",
+  "name": "TestUser1",
+  "email": "testuser1@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+
+🔐 LOGIN USER
+-------------------------
+Method: POST
+URL:    /login
+Body (raw JSON):
+{
+  "email": "testuser1@example.com",
+  "password": "test12345"
+}
+
+✔️ Response (200 OK):
+{
+  "_id": "some_object_id",
+  "name": "TestUser1",
+  "email": "testuser1@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+
+📤 USING TOKEN FOR PROTECTED ROUTES
+----------------------------------------
+Header:
+Authorization: Bearer <paste_token_here>
+
+Example:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+
+
+
+--------------------------------------------------------------------------
+
+

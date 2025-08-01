@@ -6,10 +6,9 @@
 .env.*
 
 # Uploads or user files
-/upload
+/uploads
 
 # Lock file
-/package-lock.json
 package-lock.json
 
 # macOS system files
@@ -20,10 +19,10 @@ package-lock.json
 dist/
 web-build/
 
-# TypeScript build info (if using TS)
-/*.tsbuildinfo
+# TypeScript build info
+*.tsbuildinfo
 
-# Android and debug
+# Android keys and debug files
 android/app/debug.keystore
 *.jks
 *.key

@@ -1,5 +1,5 @@
 const transporter = require("../config/email");
-const ContactMessage = require("../models/messageModel"); // << Add this
+const ContactMessage = require("../models/messageModel");
 
 const sendContactForm = async (req, res) => {
   const { name, email, message } = req.body;
@@ -18,15 +18,11 @@ const sendContactForm = async (req, res) => {
   };
 
   try {
-    // 💾 Save to database
     await ContactMessage.create({ name, email, message });
-
-    // 📧 Send email
     await transporter.sendMail(mailOptions);
 
     return res.status(200).json({ success: true, message: "Message sent & saved!" });
   } catch (error) {
-    console.error("Error sending contact form:", error);
     return res.status(500).json({ success: false, message: "Failed to process request." });
   }
 };

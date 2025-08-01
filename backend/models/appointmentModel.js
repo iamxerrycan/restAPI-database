@@ -14,13 +14,15 @@ const appointmentSchema = new mongoose.Schema({
     required: true,
   },
   fileUrls: {
-    type: [String],  // Array of file URLs
+    type: [String],
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,  // Ensure every appointment is linked to a user
+    required: true,
   },
+}, {
+  timestamps: true,
 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

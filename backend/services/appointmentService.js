@@ -1,93 +1,62 @@
 const Appointment = require('../models/appointmentModel');
 
-// ✅ Create a new appointment
-const createAppointment = async (req, res) => {
-  const { name, email, date, fileUrls } = req.body;
-
-  // Ensure fileUrls is an array (even for a single file)
-  const files = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
-
-  const appointment = new Appointment({
-    name,
-    email,
-    date,
-    fileUrls: files,  // Use the validated fileUrls
-    user: req.user._id,  // Associate appointment with the user
-  });
-
+const createAppointment = async (data) => {
   try {
-    await appointment.save();
-    res.status(201).json(appointment);
-  } catch (error) {
-    console.error(error);  // Log the error for debugging
-    res.status(400).json({
-      message: `Error creating appointment: ${error.message}`,
+    const { name, email, date, fileUrls, user } = data;
+
+    if (!name || !email || !date || !user) {
+      throw new Error('Missing required fields: name, email, date, or user.');
+    }
+
+    const files = Array.isArray(fileUrls) ? fileUrls : fileUrls ? [fileUrls] : [];
+
+    const appointment = new Appointment({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      date: new Date(date),
+      fileUrls: files,
+      user,
     });
+
+    return await appointment.save();
+  } catch (error) {
+    throw new Error(`Create failed: ${error.message}`);
   }
 };
 
-// ✅ Get all appointments for the logged-in user
-const getAppointments = async (req, res) => {
+const getAppointments = async (userId) => {
   try {
-    const appointments = await Appointment.find({ user: req.user._id });
-    res.status(200).json(appointments);
+    return await Appointment.find({ user: userId });
   } catch (error) {
-    console.error(error);  // Log the error for debugging
-    res.status(400).json({
-      message: `Error fetching appointments: ${error.message}`,
-    });
+    throw new Error(`Fetch failed: ${error.message}`);
   }
 };
 
-// ✅ Update an existing appointment
-const updateAppointment = async (req, res) => {
-  const { name, email, date, fileUrls } = req.body;
-  const { id } = req.params;
-
-  // Ensure fileUrls is an array (even for a single file)
-  const files = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
-
+const updateAppointment = async (id, updatedData) => {
   try {
+    const { name, email, date, fileUrls, user } = updatedData;
+
+    const files = Array.isArray(fileUrls) ? fileUrls : [fileUrls];
+
     const appointment = await Appointment.findOneAndUpdate(
-      { _id: id, user: req.user._id },  // Ensure the user owns the appointment
+      { _id: id, user },
       { name, email, date, fileUrls: files },
-      { new: true }  // Return the updated appointment
+      { new: true }
     );
 
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
-
-    res.status(200).json(appointment);
+    return appointment;
   } catch (error) {
-    console.error(error);  // Log the error for debugging
-    res.status(400).json({
-      message: `Error updating appointment: ${error.message}`,
-    });
+    throw new Error(`Error updating appointment: ${error.message}`);
   }
 };
 
-// ✅ Delete an appointment
-const deleteAppointment = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const appointment = await Appointment.findOneAndDelete({
-      _id: id,
-      user: req.user._id,  // Ensure the user owns the appointment
-    });
-
-    if (!appointment) {
-      return res.status(404).json({ message: 'Appointment not found' });
-    }
-
-    res.status(200).json({ message: 'Appointment deleted' });
-  } catch (error) {
-    console.error(error);  // Log the error for debugging
-    res.status(400).json({
-      message: `Error deleting appointment: ${error.message}`,
-    });
+const deleteAppointment = async (id, userId) => {
+  if (!id || !userId) {
+    throw new Error("Missing id or userId");
   }
+
+  const deleted = await Appointment.findOneAndDelete({ _id: id, user: userId });
+  return deleted;
 };
 
 module.exports = {

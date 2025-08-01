@@ -2,13 +2,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// ✅ Ensure uploads/ directory exists
 const uploadDir = 'uploads';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// ✅ Multer storage setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
@@ -19,7 +17,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// ✅ File filter
 const fileFilter = (req, file, cb) => {
   const allowedFileTypes = ['.jpg', '.jpeg', '.png', '.pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
@@ -30,7 +27,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// ✅ Multer middleware
 const upload = multer({
   storage,
   fileFilter,

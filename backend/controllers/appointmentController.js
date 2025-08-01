@@ -1,22 +1,15 @@
 const appointmentService = require('../services/appointmentService');
 
-// ✅ CREATE CONTROLLER
 const createAppointmentController = async (req, res) => {
   try {
-    // ✅ Correct for single file upload
     const fileUrls = req.file ? [`/uploads/${req.file.filename}`] : [];
-
-    console.log('Received data:', req.body);
-    console.log('req.file:', req.file);
-    console.log('File URLs:', fileUrls); 
-    console.log("BODY TYPE:", typeof req.body);
-console.log("BODY VALUE:", req.body);   
 
     const appointment = await appointmentService.createAppointment({
       ...req.body,
-      fileUrls, // Include fileUrls in the appointment data
-      user: req.user._id, // Associate appointment with the user
+      fileUrls,
+      user: req.user._id,
     });
+
     res.status(201).json({
       success: true,
       data: appointment,
@@ -29,11 +22,9 @@ console.log("BODY VALUE:", req.body);
   }
 };
 
-
-// ✅ GET CONTROLLER
 const getAppointmentsController = async (req, res) => {
   try {
-    const appointments = await appointmentService.getAppointments();
+    const appointments = await appointmentService.getAppointments(req.user._id);
     res.status(200).json({
       success: true,
       data: appointments,
@@ -46,20 +37,17 @@ const getAppointmentsController = async (req, res) => {
   }
 };
 
-// ✅ UPDATE CONTROLLER
 const updateAppointmentController = async (req, res) => {
   try {
-
     const fileUrls = req.file ? [`/uploads/${req.file.filename}`] : [];
 
     const updatedData = {
-      ...req.body,  // Spread other data (name, email, date)
-      ...(fileUrls.length > 0 && { fileUrls }), // If file uploaded, include fileUrls
+      ...req.body,
+      ...(fileUrls.length > 0 && { fileUrls }),
     };
 
     const appointment = await appointmentService.updateAppointment(req.params.id, updatedData);
-    
-    // ✅ Added 404 check if not found
+
     if (!appointment) {
       return res.status(404).json({
         success: false,
@@ -79,12 +67,12 @@ const updateAppointmentController = async (req, res) => {
   }
 };
 
-// ✅ DELETE CONTROLLER
 const deleteAppointmentController = async (req, res) => {
   try {
-    const appointment = await appointmentService.deleteAppointment(req.params.id);
+    const { id } = req.params;
 
-    // ✅ Added 404 check if not found
+    const appointment = await appointmentService.deleteAppointment(id, req.user._id);
+
     if (!appointment) {
       return res.status(404).json({
         success: false,
