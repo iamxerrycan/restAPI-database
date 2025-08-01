@@ -335,3 +335,33 @@ dotenv (Environment config)
 🔗 [Postman Collection Link](https://www.postman.com/telecoms-explorer-67431952/workspace/my-workspace/collection/28893292-24e711e4-6a55-4e91-9c04-69d9ad57ff05?action=share&source=copy-link&creator=28893292)
 
 ---
+
+🔐 AUTH APIs
+Register (POST)
+https://rest-api-backend-lad4.onrender.com/api/appointments/auth/register
+
+Login (POST)
+https://rest-api-backend-lad4.onrender.com/api/appointments/auth/login
+
+📆 APPOINTMENT APIs (Protected — JWT required)
+Create Appointment (POST)
+https://rest-api-backend-lad4.onrender.com/api/appointments/add
+
+Get All Appointments (GET)
+https://rest-api-backend-lad4.onrender.com/api/appointments
+
+Update Appointment (PUT)
+https://rest-api-backend-lad4.onrender.com/api/appointments/:id
+
+Delete Appointment (DELETE)
+https://rest-api-backend-lad4.onrender.com/api/appointments/:id
+
+📩 CONTACT FORM API (Public)
+Send Contact Message (POST)
+https://rest-api-backend-lad4.onrender.com/api/portfolio/contact
+
+🌦️ WEATHER API (Public)
+Get Weather by City (GET)
+https://rest-api-backend-lad4.onrender.com/weather?q=CityName
+
+---
