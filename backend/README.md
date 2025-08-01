@@ -10,6 +10,8 @@ This API allows users to:
 
 ## 🚀 Base URLs
 
+- Render: `https://rest-api-backend-lad4.onrender.com` use this for `http://localhost:5000`
+
 - Auth: `http://localhost:5000/api/appointments/auth`
 - Weather: `http://localhost:5000/weather`
 - Contact: `http://localhost:5000/api/portfolio/contact`
@@ -333,4 +335,3 @@ dotenv (Environment config)
 🔗 [Postman Collection Link](https://www.postman.com/telecoms-explorer-67431952/workspace/my-workspace/collection/28893292-24e711e4-6a55-4e91-9c04-69d9ad57ff05?action=share&source=copy-link&creator=28893292)
 
 ---
-
